@@ -29,29 +29,6 @@
     <url>http://www.lti.cs.cmu.edu</url>
   </organization>
   
-  <!-- plugin repos -->
-  <pluginRepositories>
-    <pluginRepository>
-      <releases>
-	<updatePolicy>never</updatePolicy>
-      </releases>
-      <snapshots>
-	    <enabled>false</enabled>
-      </snapshots>
-      <id>central</id>
-      <name>Maven Plugin Repository</name>
-      <url>http://repo1.maven.org/maven2</url>
-    </pluginRepository>
-    <pluginRepository>
-      <releases><enabled>false</enabled></releases>
-      <snapshots />
-      <id>codehaus snapshot repository</id>
-      <name>Codehaus Snapshot Repository</name>
-      <url>http://snapshots.repository.codehaus.org</url>
-    </pluginRepository>
-  </pluginRepositories>
-  <!--plugin repos-->
-
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -83,6 +60,23 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <phase>generate-resources</phase>
+              <goals><goal>add-resource</goal></goals>
+              <configuration>
+                <resources>
+                  <resource>
+                    <directory>src/main/config</directory>
+                  </resource>
+                </resources>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.3</version>
         </plugin>
@@ -101,10 +95,12 @@
             </descriptorRefs>
             <archive>
               <manifest>
+                <addClasspath>true</addClasspath>
                 <mainClass>edu.cmu.lti.jawjaw.JAWJAW</mainClass>
               </manifest>
             </archive>
           </configuration>
+          <!-- 
           <executions>
             <execution>
               <phase>package</phase>
@@ -113,8 +109,8 @@
               </goals>
             </execution>
           </executions>
+           -->
         </plugin>
-	<!--[tomcat deploy-->
 	<plugin>
 	  <groupId>org.codehaus.mojo</groupId>
 	  <artifactId>tomcat-maven-plugin</artifactId>
@@ -124,12 +120,10 @@
 	    <url>http://localhost:8080/manager</url>
 	  </configuration>
 	</plugin>
-	<!--tomcat deploy]-->
       </plugins>
     </pluginManagement>
   </build>
 
-  <!-- repos -->
   <repositories>
     <repository>
       <releases><enabled>false</enabled></releases>
@@ -138,8 +132,28 @@
       <url>http://snapshots.maven.codehaus.org/maven2/</url>
     </repository>
   </repositories>
-  <!-- repos -->
   
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+	<updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+	    <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Maven Plugin Repository</name>
+      <url>http://repo1.maven.org/maven2</url>
+    </pluginRepository>
+    <pluginRepository>
+      <releases><enabled>false</enabled></releases>
+      <snapshots />
+      <id>codehaus snapshot repository</id>
+      <name>Codehaus Snapshot Repository</name>
+      <url>http://snapshots.repository.codehaus.org</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <reporting>
     <outputDirectory>target/site</outputDirectory>
     <plugins>

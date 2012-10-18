@@ -190,7 +190,7 @@ public class JAWJAW {
 	 * @param pos part of speech
 	 * @return antonyms
 	 */
-	public static Set<String> findSeeAntonyms( String word, POS pos ) {
+	public static Set<String> findAntonyms( String word, POS pos ) {
 		return WordNetUtil.findLinks(word, pos, Link.ants);
 	}
 	

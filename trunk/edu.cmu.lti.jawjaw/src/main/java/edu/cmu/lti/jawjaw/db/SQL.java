@@ -78,7 +78,11 @@ final public class SQL {
 		Class.forName( DRIVER );
 		
 		// Doesn't work with "/data/wnjpn-0.9.db", "wnjpn-0.9.db"
-		URL dbUrl = SQL.class.getResource( "/"+Configuration.getInstance().getWordnet() );
+		String classpath = "/"+Configuration.getInstance().getWordnet();
+		URL dbUrl = SQL.class.getResource( classpath );
+		if (dbUrl==null) {
+		  System.err.println("ERROR: Make sure the NICT wordnet db is stored in classpath at: "+classpath);
+		}
 		String pathToWordNet = URLDecoder.decode(dbUrl.getPath(), "UTF-8");
 		pathToWordNet = extractDBIfJar( pathToWordNet );
 		

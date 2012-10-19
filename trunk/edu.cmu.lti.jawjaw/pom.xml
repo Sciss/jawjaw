@@ -20,7 +20,7 @@
   <groupId>edu.cmu.lti</groupId>
   <artifactId>jawjaw</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <name>JAWJAW</name>
   <url>http://www.cs.cmu.edu/~hideki/softwares/jawjaw</url>
 
@@ -58,23 +58,6 @@
             <target>1.5</target>
             <encoding>UTF-8</encoding>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <executions>
-            <execution>
-              <phase>generate-resources</phase>
-              <goals><goal>add-resource</goal></goals>
-              <configuration>
-                <resources>
-                  <resource>
-                    <directory>src/main/config</directory>
-                  </resource>
-                </resources>
-              </configuration>
-            </execution>
-          </executions>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
@@ -122,6 +105,14 @@
 	</plugin>
       </plugins>
     </pluginManagement>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/config</directory>
+      </resource>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+      </resource>
+    </resources>
   </build>
 
   <repositories>

@@ -53,10 +53,11 @@ Maven command:
   mvn install
 
 Launch file for eclipse + m2eclipse: 
-  launches/JAWJAW_install_without_dependency.launch
+  launches/JAWJAW_package_m2e.launch
 
 Output jar file (may need a refresh on the directory):
-  target/jawjaw.jar
+  target/jawjaw.jar (not including sqlite-jdbc)
+  target/jawjaw-jar-with-dependencies.jar (including sqlite-jdbc)
 
 ---- Related Project ----
 Please also see our sister project WS4J (WordNet Similarity for Java).

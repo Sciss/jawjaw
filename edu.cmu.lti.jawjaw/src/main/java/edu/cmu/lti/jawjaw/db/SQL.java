@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -43,8 +42,8 @@ final public class SQL {
 
 	private static Connection connection;
 	private static final String DRIVER = "org.sqlite.JDBC";
-	private static final String tempPrefix = "wnja-temp-";
 	private static final SQL instance = new SQL(); // this is last. order matters!!
+	private static final boolean BENCHMARK = false;
 	
 	private ConcurrentMap<SQLQuery,PreparedStatement> preparedStatements = null;
 	
@@ -83,10 +82,11 @@ final public class SQL {
 		if (dbUrl==null) {
 		  System.err.println("ERROR: Make sure the NICT wordnet db is stored in classpath at: "+classpath);
 		}
-		String pathToWordNet = URLDecoder.decode(dbUrl.getPath(), "UTF-8");
-		pathToWordNet = extractDBIfJar( pathToWordNet );
-		
-		String sqlUrl = "jdbc:sqlite:"+pathToWordNet;
+//		String pathToWordNet = URLDecoder.decode(dbUrl.getPath(), "UTF-8");
+//		pathToWordNet = extractDBIfJar( pathToWordNet );
+//		
+//		String sqlUrl = "jdbc:sqlite:"+pathToWordNet;
+		String sqlUrl = "jdbc:sqlite::resource:"+Configuration.getInstance().getWordnet();
 		
 		// Memory DB mode is super fast after the initialization. 
 		if ( Configuration.getInstance().useMemoryDB() ) {
@@ -102,7 +102,7 @@ final public class SQL {
 	
 	private void createIndexIfNotExists( Connection connection ) {
 		long t0 = System.currentTimeMillis();
-		System.out.print( "Building index on DB ... " );
+		if (BENCHMARK) System.out.print( "Building index on DB ... " );
 		Statement s = null;
 		try {
 			s = connection.createStatement();
@@ -125,7 +125,7 @@ final public class SQL {
 			} catch ( SQLException e2 ) { e2.printStackTrace(); }
 		}
 		long t1 = System.currentTimeMillis();
-		System.out.println( "done in "+((double)(t1-t0)/1000D)+" sec." );
+		if (BENCHMARK) System.out.println( "done in "+((double)(t1-t0)/1000D)+" sec." );
 	}
 	
 	private void setPragmaCacheSize( Connection connection ) {
@@ -153,7 +153,18 @@ final public class SQL {
 		}
 	}
 	
-	private String extractDBIfJar( String pathToWordNet ) throws IOException {
+	/**
+	 * Unused!
+	 * Since v1.0.2, "jdbc:sqlite::resource:" doesn't require extracting 
+	 * a file from jar as long as it's in classpath. 
+	 * 
+	 * @param pathToWordNet
+	 * @return extracted path
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unused")
+  private String extractDBIfJar( String pathToWordNet ) throws IOException {
+	  final String tempPrefix = "wnja-temp-";
 		// If not in jar, short circuit.
 		if ( pathToWordNet.indexOf("jar!")==-1 ) {
 			return pathToWordNet;

@@ -15,14 +15,9 @@
  */
 package edu.cmu.lti.jawjaw.db;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -33,7 +28,11 @@ import edu.cmu.lti.jawjaw.db.datamover.DataMoverUtility;
 import edu.cmu.lti.jawjaw.util.Configuration;
 
 /**
- * This class is responsible for communicating with the database
+ * This class is responsible for communicating with the database.
+ * Need to benchmark whether this version without prepared-statement
+ * is faster. Unless the same query is not recycled over and over,
+ * statement preparation is costly...?   
+ *  
  * @author Hideki Shima
  *
  */
@@ -41,9 +40,9 @@ final public class UnpreparedSQL {
 
 	private static Connection connection;
 	private static final String DRIVER = "org.sqlite.JDBC";
-	private static final String tempPrefix = "wnja-temp-";
 	private static final UnpreparedSQL instance = new UnpreparedSQL(); // this is last. order matters!!
-	
+  private static final boolean BENCHMARK = false;
+  
 	/**
 	 * Private constructor 
 	 */
@@ -72,12 +71,18 @@ final public class UnpreparedSQL {
 		// Classload the driver
 		Class.forName( DRIVER );
 		
-		// Doesn't work with "/data/wnjpn-0.9.db", "wnjpn-0.9.db"
-		URL dbUrl = UnpreparedSQL.class.getResource( "/"+Configuration.getInstance().getWordnet() ); 
-		String pathToWordNet = URLDecoder.decode(dbUrl.getPath(), "UTF-8");
-		pathToWordNet = extractDBIfJar( pathToWordNet );
-		String sqlUrl = "jdbc:sqlite:"+pathToWordNet;
-		
+	// Doesn't work with "/data/wnjpn-0.9.db", "wnjpn-0.9.db"
+    String classpath = "/"+Configuration.getInstance().getWordnet();
+    URL dbUrl = SQL.class.getResource( classpath );
+    if (dbUrl==null) {
+      System.err.println("ERROR: Make sure the NICT wordnet db is stored in classpath at: "+classpath);
+    }
+//    String pathToWordNet = URLDecoder.decode(dbUrl.getPath(), "UTF-8");
+//    pathToWordNet = extractDBIfJar( pathToWordNet );
+//    
+//    String sqlUrl = "jdbc:sqlite:"+pathToWordNet;
+    String sqlUrl = "jdbc:sqlite::resource:"+Configuration.getInstance().getWordnet();
+    
 		// Memory DB mode is super fast after the initialization. 
 		if ( Configuration.getInstance().useMemoryDB() ) {
 			connection = DataMoverUtility.getMemoryDBConnection( DRIVER, sqlUrl );
@@ -92,7 +97,7 @@ final public class UnpreparedSQL {
 	
 	private void createIndexIfNotExists( Connection connection ) {
 		long t0 = System.currentTimeMillis();
-		System.out.print( "Building index on DB ... " );
+		if (BENCHMARK) System.out.print( "Building index on DB ... " );
 		Statement s = null;
 		try {
 			s = connection.createStatement();
@@ -115,7 +120,7 @@ final public class UnpreparedSQL {
 			} catch ( SQLException e2 ) { e2.printStackTrace(); }
 		}
 		long t1 = System.currentTimeMillis();
-		System.out.println( "done in "+((double)(t1-t0)/1000D)+" sec." );
+		if (BENCHMARK) System.out.println( "done in "+((double)(t1-t0)/1000D)+" sec." );
 	}
 	
 	private void setPragmaCacheSize( Connection connection ) {
@@ -132,55 +137,6 @@ final public class UnpreparedSQL {
 				if ( s != null ) s.close(); 
 			} catch ( SQLException e2 ) { e2.printStackTrace(); }
 		}
-	}
-		
-	private String extractDBIfJar( String pathToWordNet ) throws IOException {
-		// If not in jar, short circuit.
-		if ( pathToWordNet.indexOf("jar!")==-1 ) {
-			return pathToWordNet;
-		}
-		
-		System.out.print( "Extracting wordnet database from jar file ... " );
-		long t0 = System.currentTimeMillis();
-		String wnName = Configuration.getInstance().getWordnet();
-		
-		String tempFolderPath = new File(System.getProperty("java.io.tmpdir")).getAbsolutePath();
-		File tempFolder = new File(tempFolderPath);
-		
-		// terminate old temp files not deleted 
-		File[] oldTempFiles = tempFolder.listFiles(new FileFilter() {
-		  public boolean accept(File file) {
-	        return ( file.getName().startsWith(tempPrefix) );
-	      }
-	    });
-		for ( File f : oldTempFiles ) {
-			boolean deleted = f.delete();
-			if (!deleted) {
-				System.out.print( "Failed to delete old wn-ja files at "+f.getAbsolutePath() );
-			}
-		}
-		
-		File uncompressedDb = File.createTempFile(tempPrefix, ".db");
-		uncompressedDb.deleteOnExit();
-				
-		try {
-			InputStream reader = UnpreparedSQL.class.getResourceAsStream("/"+wnName);
-			FileOutputStream writer = new FileOutputStream(uncompressedDb);
-	        byte[] buffer = new byte[1024];
-	        int bytesRead = 0;
-	        while ((bytesRead = reader.read(buffer)) != -1)
-	        {
-	            writer.write(buffer, 0, bytesRead);
-	        }
-	        writer.close();
-	        reader.close();
-		} catch ( IOException e ) {
-			e.printStackTrace();
-		}
-		
-		long t1 = System.currentTimeMillis();
-		System.out.println( "done in "+(double)(t1-t0)/1000D + " sec." );
-		return uncompressedDb.getAbsolutePath();
 	}
 	
 	public PreparedStatement getPreparedStatement( SQLQuery query ) throws SQLException {

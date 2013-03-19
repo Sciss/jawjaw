@@ -156,10 +156,10 @@ public class DataMover {
 			statementSrc = source.prepareStatement(selectSQL.toString());
 			rs = statementSrc.executeQuery();
 
-			int rows = 0;
+//			int rows = 0;
 
 			while (rs.next()) {
-				rows++;
+//				rows++;
 				for (int i = 1; i <= columns.size(); i++) {
 					statementTrg.setString(i, rs.getString(i));
 				}

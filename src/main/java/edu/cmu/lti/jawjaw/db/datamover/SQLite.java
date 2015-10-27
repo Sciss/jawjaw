@@ -30,6 +30,7 @@ public class SQLite extends Database {
 	 * 
 	 * @param type
 	 *            The type reported
+	 * @param size
 	 *            The size of this column
 	 * @return The properly formatted type, for this database
 	 */

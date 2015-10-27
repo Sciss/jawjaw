@@ -45,6 +45,7 @@ public class SynsetDefDAO {
 	/**
 	 * Find synset definition record by synset and lang
 	 * @param synset e.g. 06142412-n
+	 * @param lang
 	 * @return synset definition
 	 */
 	public static SynsetDef findSynsetDefBySynsetAndLang( String synset, Lang lang ) {

@@ -13,15 +13,12 @@ crossPaths        := false
 autoScalaLibrary  := false
 
 libraryDependencies ++= Seq(
-  "com.novocode"  % "junit-interface" % "0.11"  % "test",
-  "org.xerial"    % "sqlite-jdbc"     % "3.7.2" % "test"
+  "com.novocode"  % "junit-interface" % "0.11"     % "test",
+  "org.xerial"    % "sqlite-jdbc"     % "3.8.11.2" // % "test"
 )
 
 // cf. http://www.scala-sbt.org/0.13.5/docs/Detailed-Topics/Classpaths.html
-// NOTE: if we add this to runtime, it will be packaged and thus
-// exported to Maven Central.
-//
-// unmanagedClasspath in Runtime += baseDirectory.value / "config"
+unmanagedClasspath in Runtime += baseDirectory.value / "config"
 unmanagedClasspath in Test    += baseDirectory.value / "config"
 
 homepage          := Some(url(s"https://github.com/Sciss/${name.value}"))
@@ -33,6 +30,8 @@ lazy val commonJavaOptions = Seq("-source", "1.6")
 javacOptions        := commonJavaOptions ++ Seq("-target", "1.6", "-g", "-Xlint:deprecation")
 
 javacOptions in doc := commonJavaOptions  // cf. sbt issue #355
+
+mainClass in Compile := Some("edu.cmu.lti.jawjaw.demo.AdvancedAPIDemo")
 
 // ---- publishing to Maven Central ----
 publishMavenStyle := true

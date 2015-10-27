@@ -156,8 +156,6 @@ public class SynsetDAO {
 	 * since synset only has a name in English. Start from word
 	 * record instead.
 	 * 
-	 * @param name
-	 * @param pos
 	 * @return synset records
 	 */
 	public static List<Synset> findSynsetsByNameAndPos( String name, POS pos ) {

@@ -70,9 +70,6 @@ public class WordNetUtil {
 
 	/**
 	 * Find words that have a specific relationship with the given word
-	 * @param word
-	 * @param pos
-	 * @param link
 	 * @return words
 	 */
 	public static Set<String> findLinks( String word, POS pos, Link link ) {

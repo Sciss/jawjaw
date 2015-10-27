@@ -158,7 +158,6 @@ public class WordDAO {
 	
 	/**
 	 * Find word by word id
-	 * @param wordid
 	 * @return word record
 	 */
 	public static Word findWordByWordid( int wordid ) {

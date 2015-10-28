@@ -2,7 +2,7 @@ name              := "jawjaw"
 
 organization      := "de.sciss"
 
-version           := "0.1.0-SNAPSHOT"
+version           := "0.1.0"
 
 scalaVersion      := "2.11.7"
 
@@ -13,8 +13,8 @@ crossPaths        := false
 autoScalaLibrary  := false
 
 libraryDependencies ++= Seq(
-  "com.novocode"  % "junit-interface" % "0.11"     % "test",
-  "org.xerial"    % "sqlite-jdbc"     % "3.8.11.2" // % "test"
+  "org.xerial"    % "sqlite-jdbc"     % "3.8.11.2",
+  "com.novocode"  % "junit-interface" % "0.11"     % "test"
 )
 
 // cf. http://www.scala-sbt.org/0.13.5/docs/Detailed-Topics/Classpaths.html
@@ -62,9 +62,6 @@ pomExtra := { val n = name.value
       <id>sciss</id>
       <name>Hanns Holger Rutz</name>
       <url>http://www.sciss.de</url>
-    </developer>
-    <developer>
-      <id>alex-rind</id>
     </developer>
   </developers>
 }

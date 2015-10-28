@@ -1,5 +1,9 @@
 # jawjaw
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/jawjaw/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/jawjaw)
+
+## Statement
+
 This project was exported from the original [Google Code Location](http://code.google.com/p/jawjaw).
 The purpose is to publish an artifact to Maven Central. The repository has been changed to
 build with sbt instead of Maven.

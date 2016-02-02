@@ -1,5 +1,6 @@
 # jawjaw
 
+[![Build Status](https://travis-ci.org/Sciss/jawjaw.svg?branch=master)](https://travis-ci.org/Sciss/jawjaw)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/jawjaw/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/jawjaw)
 
 ## Statement
@@ -12,6 +13,10 @@ To run the tests, download http://nlpwww.nict.go.jp/wn-ja/data/1.1/wnjpn.db.gz
 and unzip the `.db` file into the `config` directory.
 
 The original author is Hideki Shima. Below is the original README:
+
+## contributing
+
+Please see the file [CONTRIBUTING.md](CONTRIBUTING.md)
 
 -----
 

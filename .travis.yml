@@ -7,8 +7,14 @@ scala:
 
 jdk:
   - oraclejdk8
-  - openjdk7
   - openjdk6
 
 script:
     - sbt ++$TRAVIS_SCALA_VERSION download-database test
+
+# cf. https://github.com/travis-ci/travis-ci/issues/5227
+before_install:
+  - cat /etc/hosts # optionally check the content *before*
+  - sudo hostname "$(hostname | cut -c1-63)"
+  - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
+  - cat /etc/hosts # optionally check the content *after*

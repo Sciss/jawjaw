@@ -2,7 +2,7 @@ name              := "jawjaw"
 
 organization      := "de.sciss"
 
-version           := "0.1.0"
+version           := "0.1.1-SNAPSHOT"
 
 scalaVersion      := "2.11.7"
 
@@ -64,4 +64,22 @@ pomExtra := { val n = name.value
       <url>http://www.sciss.de</url>
     </developer>
   </developers>
+}
+
+lazy val `download-database` = taskKey[Unit]("Download the word-net database from nlpwww.nict.go.jp to config")
+
+// cf.https://stackoverflow.com/questions/27466869/download-a-zip-from-url-and-extract-it-in-resource-using-sbt
+`download-database` := {
+  val configDir = file("config")
+  val dbFile    = configDir / "wnjpn.db"
+  val st        = streams.value
+  if (dbFile.exists()) {
+    st.log.info(s"Database file ${dbFile.name} already present.")
+  } else {
+    st.log.info("Downloading database...")
+    IO.withTemporaryFile(prefix = "wnjpn.db", postfix = "gz") { tmpFile =>
+      IO.download(new URL("http://nlpwww.nict.go.jp/wn-ja/data/1.1/wnjpn.db.gz"), tmpFile)
+      IO.gunzip(tmpFile, dbFile)
+    }
+  }
 }

@@ -10,7 +10,8 @@ The purpose is to publish an artifact to Maven Central. The repository has been 
 build with sbt instead of Maven.
 
 To run the tests, download http://nlpwww.nict.go.jp/wn-ja/data/1.1/wnjpn.db.gz
-and unzip the `.db` file into the `config` directory.
+and unzip the `.db` file into the `config` directory. Alternatively, you can run
+`sbt download-database` which will accomplish the same.
 
 The original author is Hideki Shima. Below is the original README:
 
